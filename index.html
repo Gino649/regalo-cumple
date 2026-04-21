@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Mi Niña ❤️</title>
+    <style>
+        @import url('https://googleapis.com');
+        
+        body { background: #ffe5ec; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Quicksand', sans-serif; overflow: hidden; }
+        
+        /* Caja de Regalo */
+        .gift-container { text-align: center; position: relative; cursor: pointer; transition: all 0.5s; z-index: 10; }
+        .gift-box { width: 120px; height: 120px; background: #ff4d6d; position: relative; margin: 0 auto; border-radius: 8px; }
+        .gift-box::before { content: ""; position: absolute; width: 20px; height: 100%; background: #fff; left: 50px; }
+        .gift-box::after { content: ""; position: absolute; width: 100%; height: 20px; background: #fff; top: 50px; }
+        .lid { width: 140px; height: 30px; background: #ff4d6d; position: absolute; top: -10px; left: -10px; border-radius: 5px; z-index: 2; border-bottom: 3px solid rgba(0,0,0,0.1); }
+        
+        /* Contenido Oculto */
+        .content { display: none; width: 90%; max-width: 400px; animation: fadeIn 2s forwards; }
+        h1 { font-family: 'Dancing Script', cursive; color: #c9184a; font-size: 2.5rem; margin-bottom: 10px; }
+        
+        /* Galería de Fotos */
+        .photo-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
+        .photo-gallery img { width: 100%; border-radius: 10px; border: 5px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transform: rotate(-3deg); transition: 0.3s; }
+        .photo-gallery img:nth-child(even) { transform: rotate(3deg); }
+        .photo-gallery img:hover { transform: scale(1.1) rotate(0deg); z-index: 5; }
+
+        /* Animaciones */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .heart { position: absolute; color: #ff4d6d; animation: float 4s infinite linear; pointer-events: none; }
+        @keyframes float { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+        .opened .gift-container { display: none; }
+        .opened .content { display: block; }
+    </style>
+</head>
+<body id="body">
+
+    <!-- Música: Reemplaza el link por uno de YouTube o MP3 directo -->
+    <audio id="musica" loop>
+        <source src="https://soundhelix.com" type="audio/mpeg">
+    </audio>
+
+    <div class="gift-container" id="gift" onclick="abrirRegalo()">
+        <div class="gift-box">
+            <div class="lid"></div>
+        </div>
+        <p style="color: #c9184a; margin-top: 15px; font-weight: bold;">¡Haz clic en tu regalo! ✨</p>
+    </div>
+
+    <div class="content" id="mainContent">
+        <h1>¡Feliz Cumpleaños, Amor! 🎂</h1>
+        <p>Gracias por cada momento a tu lado. Eres mi persona favorita. ❤️</p>
+        
+        <div class="photo-gallery">
+            <!-- REEMPLAZA ESTOS LINKS CON TUS FOTOS -->
+            <img src="https://placeholder.com" alt="Nosotros 1">
+            <img src="https://placeholder.com" alt="Nosotros 2">
+            <img src="https://placeholder.com" alt="Nosotros 3">
+            <img src="https://placeholder.com" alt="Nosotros 4">
+        </div>
+    </div>
+
+    <script>
+        function abrirRegalo() {
+            document.getElementById('body').classList.add('opened');
+            document.getElementById('musica').play(); // La música inicia al hacer clic
+            setInterval(createHeart, 300);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+            heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
