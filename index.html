@@ -3,70 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://jsdelivr.net"></script>
     <title>Para Mi Amor ❤️</title>
     <style>
+        /* Importación correcta de fuentes */
         @import url('https://googleapis.com');
         
-        body { background: #ffe5ec; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Quicksand', sans-serif; overflow: hidden; }
         
+        body { 
+            background: #ffe5ec; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            font-family: 'Quicksand', sans-serif; 
+            overflow-x: hidden; 
+            overflow-y: auto;
+            transition: all 0.5s;
+        }
+
+        /* Cuando se abre, el contenido empieza desde arriba */
+        body.opened {
+            align-items: flex-start;
+            padding-top: 30px;
+        }
+
         /* Caja de Regalo */
-        .gift-container { text-align: center; position: relative; cursor: pointer; transition: all 0.5s; z-index: 10; }
-        .gift-box { width: 120px; height: 120px; background: #ff4d6d; position: relative; margin: 0 auto; border-radius: 8px; }
+        .gift-container { text-align: center; position: relative; cursor: pointer; z-index: 10; }
+        .gift-box { width: 120px; height: 120px; background: #ff4d6d; position: relative; margin: 0 auto; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .gift-box::before { content: ""; position: absolute; width: 20px; height: 100%; background: #fff; left: 50px; }
         .gift-box::after { content: ""; position: absolute; width: 100%; height: 20px; background: #fff; top: 50px; }
         .lid { width: 140px; height: 30px; background: #ff4d6d; position: absolute; top: -10px; left: -10px; border-radius: 5px; z-index: 2; border-bottom: 3px solid rgba(0,0,0,0.1); }
         
         /* Contenido Oculto */
-        .content { display: none; width: 90%; max-width: 400px; animation: fadeIn 2s forwards; }
-        h1 { font-family: 'Dancing Script', cursive; color: #c9184a; font-size: 2.5rem; margin-bottom: 10px; }
+        .content { display: none; width: 90%; max-width: 450px; text-align: center; padding-bottom: 50px; }
         
-        /* Galería de Fotos */
-        .photo-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
-        .photo-gallery img { width: 100%; border-radius: 10px; border: 5px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transform: rotate(-3deg); transition: 0.3s; }
-        .photo-gallery img:nth-child(even) { transform: rotate(3deg); }
+        /* Efecto Máquina de Escribir */
+        h1 { 
+            font-family: 'Dancing Script', cursive; 
+            color: #c9184a; 
+            font-size: 2.2rem; 
+            margin-bottom: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid #ff4d6d;
+            width: 0;
+            margin: 0 auto;
+        }
+
+        .opened h1 {
+            animation: typing 3s steps(30, end) forwards, blink .75s step-end infinite;
+        }
+
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink { from, to { border-color: transparent } 50% { border-color: #ff4d6d } }
+
+        #contador { color: #ff4d6d; font-weight: 700; margin: 15px 0; font-size: 1.1rem; }
+
+        /* Galería de Fotos (Completas y con Scroll) */
+        .photo-gallery { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-top: 25px;
+        }
+
+        .photo-gallery img { 
+            width: 100%; 
+            height: 180px; 
+            object-fit: contain; /* Foto completa sin recortes */
+            background: white; 
+            border-radius: 5px; 
+            border: 5px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .photo-gallery img:nth-child(odd) { transform: rotate(-2deg); }
+        .photo-gallery img:nth-child(even) { transform: rotate(2deg); }
         .photo-gallery img:hover { transform: scale(1.1) rotate(0deg); z-index: 5; }
 
-        /* Animaciones */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .heart { position: absolute; color: #ff4d6d; animation: float 4s infinite linear; pointer-events: none; }
+        /* Botón Sorpresa */
+        .btn-love {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: bold;
+            margin-top: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        /* Corazones Animados */
+        .heart { position: absolute; color: #ff4d6d; animation: float 4s infinite linear; pointer-events: none; z-index: 100; }
         @keyframes float { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+        
         .opened .gift-container { display: none; }
-        .opened .content { display: block; }
+        .opened .content { display: block; animation: fadeIn 2s forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 350px) { .photo-gallery { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body id="body">
 
-    <!-- Música: Reemplaza el link por uno de YouTube o MP3 directo -->
     <audio id="musica" loop>
         <source src="music/llegastes_tu.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="gift-container" id="gift" onclick="abrirRegalo()">
-        <div class="gift-box">
-            <div class="lid"></div>
-        </div>
-        <p style="color: #c9184a; margin-top: 15px; font-weight: bold;">¡Haz clic en tu regalo! ✨</p>
+    <div class="gift-container" onclick="abrirRegalo()">
+        <div class="gift-box"><div class="lid"></div></div>
+        <p style="color: #c9184a; margin-top: 15px; font-weight: bold;">¡Toca tu regalo, amor! ✨</p>
     </div>
 
-    <div class="content" id="mainContent">
+    <div class="content">
         <h1>¡Feliz Cumpleaños, Amor! 🎂</h1>
-        <p>Gracias por cada momento a tu lado. Eres mi persona favorita. ❤️</p>
+        
+        <div id="contador">
+            Llevamos <span id="dias">0</span> días creando nuestra historia ❤️
+        </div>
+
+        <p style="color: #c9184a;">Eres mi persona favorita en el mundo entero. Gracias por estar conmigo. ❤️</p>
         
         <div class="photo-gallery">
-            <!-- REEMPLAZA ESTOS LINKS CON TUS FOTOS -->
-            <img src="images/regalo1.jpeg" alt="regalo">
-            <img src="images/inicio.jpeg" alt="Inicio">
-            <img src="images/juntos1.jpeg" alt="juntos familia">
-            <img src="images/juntos2.jpeg" alt="juntos">
-            <img src="images/pedida.png" alt="Pedida">
+            <img src="images/regalo1.jpeg" alt="foto1">
+            <img src="images/amor.jpeg" alt="foto2">
+            <img src="images/inicio.jpeg" alt="foto3">
+            <img src="images/juntos1.jpeg" alt="foto4">
+            <img src="images/juntos2.jpeg" alt="foto5">
+            <img src="images/pedida.png" alt="foto6">
         </div>
+
+        <button class="btn-love" onclick="superCorazones()">¡Presiona aquí! 💖</button>
     </div>
 
     <script>
         function abrirRegalo() {
-            document.getElementById('body').classList.add('opened');
-            document.getElementById('musica').play(); // La música inicia al hacer clic
+            document.body.classList.add('opened'); 
+            document.getElementById('musica').play();
             setInterval(createHeart, 300);
+            calcularDias();
+        }
+
+        function calcularDias() {
+            const fechaInicio = new Date('2023-12-29'); // <--- CAMBIA TU FECHA AQUÍ (AÑO-MES-DÍA)
+            const hoy = new Date();
+            const dias = Math.floor((hoy - fechaInicio) / (1000 * 60 * 60 * 24));
+            document.getElementById('dias').innerText = dias;
         }
 
         function createHeart() {
@@ -78,6 +165,33 @@
             heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 4000);
+        }
+
+        function superCorazones() {
+            // Lluvia masiva de corazones
+            for (let i = 0; i < 50; i++) {
+                setTimeout(createHeart, i * 50);
+            }
+
+            // Ventana emergente personalizada
+            Swal.fire({
+                title: '¡Eres el amor de mi vida! 😍',
+                text: 'Que tengas el mejor de los cumpleaños, mi niña hermosa. Gracias por hacerme tan feliz cada día.',
+                imageUrl: 'images/amor.jpeg', // Aquí puedes poner la foto que más te guste
+                imageWidth: 200,
+                imageHeight: 200,
+                imageAlt: 'Nosotros',
+                background: '#ffe5ec',
+                color: '#c9184a',
+                confirmButtonText: 'Te amo ❤️',
+                confirmButtonColor: '#ff4d6d',
+                showClass: {
+                    popup: 'animate__animated animate__heartBeat' // Animación de latido
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            });
         }
     </script>
 </body>
