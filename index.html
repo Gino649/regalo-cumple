@@ -4,95 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Para Mi Amor ❤️</title>
-    <!-- Importación de Fuentes y Animaciones -->
     <link href="https://googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="https://cloudflare.com"/>
-    
     <style>
         body { 
-            background: #ffe5ec; 
-            margin: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            font-family: 'Quicksand', sans-serif; 
-            overflow-x: hidden; 
-            overflow-y: auto;
-            transition: all 0.5s;
+            background: #ffe5ec; margin: 0; display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; font-family: 'Quicksand', sans-serif; overflow-x: hidden; overflow-y: auto; transition: all 0.5s;
         }
 
-        body.opened {
-            align-items: flex-start;
-            padding-top: 30px;
-        }
+        body.opened { align-items: flex-start; padding-top: 30px; background: #ffcad4; }
 
-        /* Caja de Regalo */
-        .gift-container { text-align: center; position: relative; cursor: pointer; z-index: 10; display: block; }
-        .gift-box { width: 120px; height: 120px; background: #ff4d6d; position: relative; margin: 0 auto; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        /* Efecto de destello al abrir */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; z-index: 3000; pointer-events: none; }
+        .flashing { animation: flashAnim 0.8s ease-out; }
+        @keyframes flashAnim { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+        /* Foto de Portada con Latido y ajuste de cara */
+        .img-portada {
+            width: 180px; height: 180px; object-fit: cover; object-position: top; border-radius: 50%;
+            border: 8px solid white; box-shadow: 0 0 20px rgba(201, 24, 74, 0.3);
+            margin: 20px auto; animation: pulse 2s infinite; display: none;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .opened .img-portada { display: block; animation: fadeIn 1.5s forwards; }
+
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.4; pointer-events: none; }
+
+        .gift-container { text-align: center; cursor: pointer; z-index: 10; transition: 0.3s; }
+        .gift-container:hover { transform: scale(1.1); }
+        .gift-box { width: 120px; height: 120px; background: #ff4d6d; position: relative; margin: 0 auto; border-radius: 8px; }
         .gift-box::before { content: ""; position: absolute; width: 20px; height: 100%; background: #fff; left: 50px; }
         .gift-box::after { content: ""; position: absolute; width: 100%; height: 20px; background: #fff; top: 50px; }
-        .lid { width: 140px; height: 30px; background: #ff4d6d; position: absolute; top: -10px; left: -10px; border-radius: 5px; z-index: 2; border-bottom: 3px solid rgba(0,0,0,0.1); }
+        .lid { width: 140px; height: 30px; background: #ff4d6d; position: absolute; top: -10px; left: -10px; border-radius: 5px; z-index: 2; }
         
-        /* Contenido Oculto */
-        .content { display: none; width: 90%; max-width: 450px; text-align: center; padding-bottom: 50px; }
-        
-        h1 { 
-            font-family: 'Dancing Script', cursive; 
-            color: #c9184a; 
-            font-size: 2.2rem; 
-            margin-bottom: 10px;
-            overflow: hidden;
-            white-space: nowrap;
-            width: 0;
-            margin: 0 auto;
-        }
+        .content { display: none; width: 90%; max-width: 450px; text-align: center; padding-bottom: 50px; z-index: 5; }
+        h1 { font-family: 'Dancing Script', cursive; color: #c9184a; font-size: 2.5rem; margin: 10px 0; }
 
-        .opened h1 {
-            animation: typing 3s steps(30, end) forwards;
-            border-right: 3px solid #ff4d6d;
-        }
-
-        @keyframes typing { from { width: 0 } to { width: 100% } }
-
-        #contador { color: #ff4d6d; font-weight: 700; margin: 15px 0; font-size: 1.1rem; }
-
-        .photo-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        /* Galería con animación escalonada */
+        .photo-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .photo-gallery img { 
-            width: 100%; height: 180px; object-fit: contain; 
-            background: white; border-radius: 5px; border: 5px solid white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s;
-        }
-        .photo-gallery img:nth-child(odd) { transform: rotate(-2deg); }
-        .photo-gallery img:nth-child(even) { transform: rotate(2deg); }
-        .photo-gallery img:hover { transform: scale(1.1) rotate(0deg); z-index: 5; }
-
-        .btn-love {
-            background: #ff4d6d; color: white; border: none; padding: 12px 25px;
-            border-radius: 25px; font-weight: bold; margin-top: 30px; cursor: pointer;
+            width: 100%; height: 180px; object-fit: contain; background: white; border-radius: 8px; 
+            border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer;
+            opacity: 0; transform: translateY(30px);
         }
 
-        .btn-regresar {
-            background: transparent; color: #ff4d6d; border: 2px solid #ff4d6d; padding: 8px 20px;
-            border-radius: 20px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 0.9rem;
-            transition: 0.3s;
-        }
-        .btn-regresar:hover { background: #ff4d6d; color: white; }
+        .opened .photo-gallery img { animation: slideUp 0.8s ease-out forwards; }
+        @keyframes slideUp { to { transform: translateY(0); opacity: 1; } }
 
-        /* Modal Personalizado */
-        #miModal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;
+        /* Retrasos para el efecto cascada */
+        .photo-gallery img:nth-child(1) { animation-delay: 0.2s; }
+        .photo-gallery img:nth-child(2) { animation-delay: 0.4s; }
+        .photo-gallery img:nth-child(3) { animation-delay: 0.6s; }
+        .photo-gallery img:nth-child(4) { animation-delay: 0.8s; }
+        .photo-gallery img:nth-child(5) { animation-delay: 1.0s; }
+        .photo-gallery img:nth-child(6) { animation-delay: 1.2s; }
+
+        #photo-viewer { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column;
         }
-        .modal-body {
-            background: #ffe5ec; padding: 30px; border-radius: 20px; text-align: center;
-            max-width: 300px; border: 5px solid #ff4d6d; animation: heartBeat 1s;
-        }
+        #photo-viewer img { max-width: 90%; max-height: 70%; border: 5px solid white; border-radius: 10px; }
+        #viewer-text { color: white; margin-top: 20px; font-family: 'Dancing Script'; font-size: 1.8rem; text-align: center; }
+
+        .btn-love { background: #ff4d6d; color: white; border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; margin-top: 30px; cursor: pointer; }
+        .btn-regresar { background: transparent; color: #ff4d6d; border: 2px solid #ff4d6d; padding: 8px 20px; border-radius: 20px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+
+        #miModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-body { background: #ffe5ec; padding: 30px; border-radius: 20px; text-align: center; max-width: 300px; border: 5px solid #ff4d6d; }
 
         .heart { position: absolute; color: #ff4d6d; animation: float 4s infinite linear; pointer-events: none; z-index: 100; }
         @keyframes float { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
         
-        /* Control de estados */
         .opened .gift-container { display: none; }
         .opened .content { display: block; animation: fadeIn 2s forwards; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -104,34 +85,40 @@
         <source src="music/llegastes_tu.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="gift-container" id="giftSection" onclick="abrirRegalo()">
+    <div class="gift-container" onclick="abrirRegalo()">
         <div class="gift-box"><div class="lid"></div></div>
-        <p style="color: #c9184a; margin-top: 15px; font-weight: bold;">¡Toca tu regalo, amor! ✨</p>
+        <p style="color: #c9184a; margin-top: 15px; font-weight: bold; font-size: 1.2rem;">¡Toca tu sorpresa! ✨</p>
     </div>
 
-    <div class="content" id="contentSection">
-        <h1>¡Feliz Cumpleaños, Amor! 🎂</h1>
-        <div id="contador">Llevamos <span id="dias">0</span> días creando nuestra historia ❤️</div>
-        <p style="color: #c9184a;">Eres mi persona favorita en el mundo entero. ❤️</p>
+    <div class="content">
+        <img src="images/amor.jpeg" class="img-portada" alt="Mi Vida">
+        <h1>¡Feliz Cumpleaños! 🎂</h1>
+        <div id="contador" style="color: #ff4d6d; font-weight: 700;">❤️</div>
+        
+        <p style="color: #c9184a; font-style: italic;">Toca las fotos para recordar... ❤️</p>
         
         <div class="photo-gallery">
-            <img src="images/regalo1.jpeg" alt="foto1">
-            <img src="images/amor.jpeg" alt="foto2">
-            <img src="images/inicio.jpeg" alt="foto3">
-            <img src="images/juntos1.jpeg" alt="foto4">
-            <img src="images/juntos2.jpeg" alt="foto5">
-            <img src="images/pedida.png" alt="foto6">
+            <img src="images/regalo1.jpeg" onclick="verFoto(this.src, '¡Nuestra primera aventura! 🌹')">
+            <img src="images/amor.jpeg" onclick="verFoto(this.src, '¡La mujer más hermosa! 😍')">
+            <img src="images/inicio.jpeg" onclick="verFoto(this.src, '¡Donde todo comenzó! 🎁')">
+            <img src="images/juntos1.jpeg" onclick="verFoto(this.src, '¡Amo nuestra familia! 👨‍👩‍👦')">
+            <img src="images/juntos2.jpeg" onclick="verFoto(this.src, '¡Siempre juntos! 🥂')">
+            <img src="images/pedida.png" onclick="verFoto(this.src, '¡El mejor SÍ de mi vida! 💍')">
         </div>
 
-        <button class="btn-love" onclick="superCorazones()">¡Presiona aquí! 💖</button>
+        <button class="btn-love" onclick="superCorazones()">¡Presiona aquí mi amor! 💖</button>
         <br>
-        <button class="btn-regresar" onclick="regresarAlInicio()">Regresar al regalo 🎁</button>
+        <button class="btn-regresar" onclick="location.reload()">Regresar al inicio 🎁</button>
     </div>
 
-    <!-- Modal Personalizado -->
+    <div id="photo-viewer" onclick="cerrarFoto()">
+        <img id="viewer-img" src=""><div id="viewer-text"></div>
+        <p style="color: white; font-size: 0.8rem; margin-top: 15px;">(Toca para cerrar)</p>
+    </div>
+
     <div id="miModal">
         <div class="modal-body">
-            <img src="images/amor.jpeg" style="width:100%; border-radius:15px; margin-bottom:15px;">
+            <img src="images/juntos_amor.jpeg" style="width:100%; border-radius:15px; margin-bottom:15px;">
             <h2 style="color:#c9184a; font-family:'Dancing Script';">¡Te amo mi vida! 😍</h2>
             <p style="color:#c9184a;">Que tengas el mejor de los cumpleaños, mi niña hermosa.</p>
             <button onclick="cerrarModal()" style="background:#ff4d6d; color:white; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:bold;">Te amo ❤️</button>
@@ -141,30 +128,47 @@
     <script>
         let intervalCorazones;
 
+        for (let i = 0; i < 30; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = star.style.height = Math.random() * 3 + 'px';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(star);
+        }
+
         function abrirRegalo() {
+            const flash = document.createElement('div');
+            flash.className = 'flash-effect flashing';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 8000);
+
             document.body.classList.add('opened'); 
-            document.getElementById('musica').play();
+            const song = document.getElementById('musica');
+            song.volume = 0;
+            song.play();
+            let fadeIn = setInterval(() => {
+                if (song.volume < 0.9) song.volume += 0.1;
+                else clearInterval(fadeIn);
+            }, 300);
+
             intervalCorazones = setInterval(createHeart, 300);
             calcularDias();
         }
 
-        function regresarAlInicio() {
-            // Quitamos la clase del body para centrar de nuevo
-            document.body.classList.remove('opened');
-            // Pausamos la música (opcional, si quieres que siga sonando quita la siguiente línea)
-            document.getElementById('musica').pause();
-            document.getElementById('musica').currentTime = 0;
-            // Limpiamos el intervalo de corazones para que no se sature
-            clearInterval(intervalCorazones);
-            // Hacer scroll hacia arriba
-            window.scrollTo(0, 0);
+        function verFoto(src, texto) {
+            document.getElementById('viewer-img').src = src;
+            document.getElementById('viewer-text').innerText = texto;
+            document.getElementById('photo-viewer').style.display = 'flex';
         }
+
+        function cerrarFoto() { document.getElementById('photo-viewer').style.display = 'none'; }
 
         function calcularDias() {
             const fechaInicio = new Date('2023-12-29'); 
             const hoy = new Date();
             const dias = Math.floor((hoy - fechaInicio) / (1000 * 60 * 60 * 24));
-            document.getElementById('dias').innerText = dias;
+            document.getElementById('contador').innerText = `Llevamos ${dias} días de puro amor ❤️`;
         }
 
         function createHeart() {
@@ -179,13 +183,12 @@
         }
 
         function superCorazones() {
+            if (navigator.vibrate) navigator.vibrate(200);
             for (let i = 0; i < 50; i++) { setTimeout(createHeart, i * 50); }
             document.getElementById('miModal').style.display = 'flex';
         }
 
-        function cerrarModal() {
-            document.getElementById('miModal').style.display = 'none';
-        }
+        function cerrarModal() { document.getElementById('miModal').style.display = 'none'; }
     </script>
 </body>
 </html>
