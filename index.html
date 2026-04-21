@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://jsdelivr.net"></script>
     <title>Para Mi Amor ❤️</title>
+    <!-- Importación de Fuentes y Animaciones -->
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com"/>
+    
     <style>
-        /* Importación correcta de fuentes */
-        @import url('https://googleapis.com');
-        
-        
         body { 
             background: #ffe5ec; 
             margin: 0; 
@@ -23,14 +22,13 @@
             transition: all 0.5s;
         }
 
-        /* Cuando se abre, el contenido empieza desde arriba */
         body.opened {
             align-items: flex-start;
             padding-top: 30px;
         }
 
         /* Caja de Regalo */
-        .gift-container { text-align: center; position: relative; cursor: pointer; z-index: 10; }
+        .gift-container { text-align: center; position: relative; cursor: pointer; z-index: 10; display: block; }
         .gift-box { width: 120px; height: 120px; background: #ff4d6d; position: relative; margin: 0 auto; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .gift-box::before { content: ""; position: absolute; width: 20px; height: 100%; background: #fff; left: 50px; }
         .gift-box::after { content: ""; position: absolute; width: 100%; height: 20px; background: #fff; top: 50px; }
@@ -39,7 +37,6 @@
         /* Contenido Oculto */
         .content { display: none; width: 90%; max-width: 450px; text-align: center; padding-bottom: 50px; }
         
-        /* Efecto Máquina de Escribir */
         h1 { 
             font-family: 'Dancing Script', cursive; 
             color: #c9184a; 
@@ -47,66 +44,58 @@
             margin-bottom: 10px;
             overflow: hidden;
             white-space: nowrap;
-            border-right: 3px solid #ff4d6d;
             width: 0;
             margin: 0 auto;
         }
 
         .opened h1 {
-            animation: typing 3s steps(30, end) forwards, blink .75s step-end infinite;
+            animation: typing 3s steps(30, end) forwards;
+            border-right: 3px solid #ff4d6d;
         }
 
         @keyframes typing { from { width: 0 } to { width: 100% } }
-        @keyframes blink { from, to { border-color: transparent } 50% { border-color: #ff4d6d } }
 
         #contador { color: #ff4d6d; font-weight: 700; margin: 15px 0; font-size: 1.1rem; }
 
-        /* Galería de Fotos (Completas y con Scroll) */
-        .photo-gallery { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-            margin-top: 25px;
-        }
-
+        .photo-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
         .photo-gallery img { 
-            width: 100%; 
-            height: 180px; 
-            object-fit: contain; /* Foto completa sin recortes */
-            background: white; 
-            border-radius: 5px; 
-            border: 5px solid white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            width: 100%; height: 180px; object-fit: contain; 
+            background: white; border-radius: 5px; border: 5px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s;
         }
-
         .photo-gallery img:nth-child(odd) { transform: rotate(-2deg); }
         .photo-gallery img:nth-child(even) { transform: rotate(2deg); }
         .photo-gallery img:hover { transform: scale(1.1) rotate(0deg); z-index: 5; }
 
-        /* Botón Sorpresa */
         .btn-love {
-            background: #ff4d6d;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-family: 'Quicksand', sans-serif;
-            font-weight: bold;
-            margin-top: 30px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            background: #ff4d6d; color: white; border: none; padding: 12px 25px;
+            border-radius: 25px; font-weight: bold; margin-top: 30px; cursor: pointer;
         }
 
-        /* Corazones Animados */
+        .btn-regresar {
+            background: transparent; color: #ff4d6d; border: 2px solid #ff4d6d; padding: 8px 20px;
+            border-radius: 20px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        .btn-regresar:hover { background: #ff4d6d; color: white; }
+
+        /* Modal Personalizado */
+        #miModal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-body {
+            background: #ffe5ec; padding: 30px; border-radius: 20px; text-align: center;
+            max-width: 300px; border: 5px solid #ff4d6d; animation: heartBeat 1s;
+        }
+
         .heart { position: absolute; color: #ff4d6d; animation: float 4s infinite linear; pointer-events: none; z-index: 100; }
-        @keyframes float { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+        @keyframes float { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
         
+        /* Control de estados */
         .opened .gift-container { display: none; }
         .opened .content { display: block; animation: fadeIn 2s forwards; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        @media (max-width: 350px) { .photo-gallery { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body id="body">
@@ -115,19 +104,15 @@
         <source src="music/llegastes_tu.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="gift-container" onclick="abrirRegalo()">
+    <div class="gift-container" id="giftSection" onclick="abrirRegalo()">
         <div class="gift-box"><div class="lid"></div></div>
         <p style="color: #c9184a; margin-top: 15px; font-weight: bold;">¡Toca tu regalo, amor! ✨</p>
     </div>
 
-    <div class="content">
+    <div class="content" id="contentSection">
         <h1>¡Feliz Cumpleaños, Amor! 🎂</h1>
-        
-        <div id="contador">
-            Llevamos <span id="dias">0</span> días creando nuestra historia ❤️
-        </div>
-
-        <p style="color: #c9184a;">Eres mi persona favorita en el mundo entero. Gracias por estar conmigo. ❤️</p>
+        <div id="contador">Llevamos <span id="dias">0</span> días creando nuestra historia ❤️</div>
+        <p style="color: #c9184a;">Eres mi persona favorita en el mundo entero. ❤️</p>
         
         <div class="photo-gallery">
             <img src="images/regalo1.jpeg" alt="foto1">
@@ -139,18 +124,44 @@
         </div>
 
         <button class="btn-love" onclick="superCorazones()">¡Presiona aquí! 💖</button>
+        <br>
+        <button class="btn-regresar" onclick="regresarAlInicio()">Regresar al regalo 🎁</button>
+    </div>
+
+    <!-- Modal Personalizado -->
+    <div id="miModal">
+        <div class="modal-body">
+            <img src="images/amor.jpeg" style="width:100%; border-radius:15px; margin-bottom:15px;">
+            <h2 style="color:#c9184a; font-family:'Dancing Script';">¡Te amo mi vida! 😍</h2>
+            <p style="color:#c9184a;">Que tengas el mejor de los cumpleaños, mi niña hermosa.</p>
+            <button onclick="cerrarModal()" style="background:#ff4d6d; color:white; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:bold;">Te amo ❤️</button>
+        </div>
     </div>
 
     <script>
+        let intervalCorazones;
+
         function abrirRegalo() {
             document.body.classList.add('opened'); 
             document.getElementById('musica').play();
-            setInterval(createHeart, 300);
+            intervalCorazones = setInterval(createHeart, 300);
             calcularDias();
         }
 
+        function regresarAlInicio() {
+            // Quitamos la clase del body para centrar de nuevo
+            document.body.classList.remove('opened');
+            // Pausamos la música (opcional, si quieres que siga sonando quita la siguiente línea)
+            document.getElementById('musica').pause();
+            document.getElementById('musica').currentTime = 0;
+            // Limpiamos el intervalo de corazones para que no se sature
+            clearInterval(intervalCorazones);
+            // Hacer scroll hacia arriba
+            window.scrollTo(0, 0);
+        }
+
         function calcularDias() {
-            const fechaInicio = new Date('2023-12-29'); // <--- CAMBIA TU FECHA AQUÍ (AÑO-MES-DÍA)
+            const fechaInicio = new Date('2023-12-29'); 
             const hoy = new Date();
             const dias = Math.floor((hoy - fechaInicio) / (1000 * 60 * 60 * 24));
             document.getElementById('dias').innerText = dias;
@@ -168,30 +179,12 @@
         }
 
         function superCorazones() {
-            // Lluvia masiva de corazones
-            for (let i = 0; i < 50; i++) {
-                setTimeout(createHeart, i * 50);
-            }
+            for (let i = 0; i < 50; i++) { setTimeout(createHeart, i * 50); }
+            document.getElementById('miModal').style.display = 'flex';
+        }
 
-            // Ventana emergente personalizada
-            Swal.fire({
-                title: '¡Eres el amor de mi vida! 😍',
-                text: 'Que tengas el mejor de los cumpleaños, mi niña hermosa. Gracias por hacerme tan feliz cada día.',
-                imageUrl: 'images/amor.jpeg', // Aquí puedes poner la foto que más te guste
-                imageWidth: 200,
-                imageHeight: 200,
-                imageAlt: 'Nosotros',
-                background: '#ffe5ec',
-                color: '#c9184a',
-                confirmButtonText: 'Te amo ❤️',
-                confirmButtonColor: '#ff4d6d',
-                showClass: {
-                    popup: 'animate__animated animate__heartBeat' // Animación de latido
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__fadeOutUp'
-                }
-            });
+        function cerrarModal() {
+            document.getElementById('miModal').style.display = 'none';
         }
     </script>
 </body>
